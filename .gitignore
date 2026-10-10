@@ -1,8 +1,29 @@
+# .NET build output
+
 **/bin/
 **/obj/
+.vs/
+*.user
+*.suo
+
+# Node and Angular
+
 **/node_modules/
 **/dist/
-.vs/
-.vscode/
+**/.angular/
+
+# Environment and secrets
+
 .env
+.env.*
+!.env.example
 appsettings.Development.json
+
+# IDE
+
+.idea/
+.vscode/
+
+# Logs
+
+*.log
