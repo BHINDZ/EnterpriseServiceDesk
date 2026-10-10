@@ -1,0 +1,149 @@
+
+<section class="stats-grid">
+  <article class="stat-card">
+    <div class="stat-top">
+      <span>Total Requests</span>
+      <span class="stat-icon blue">▤</span>
+    </div>
+    <div class="stat-value">{{ total }}</div>
+    <div class="stat-caption">All recorded requests</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <span>Open</span>
+      <span class="stat-icon orange">◷</span>
+    </div>
+    <div class="stat-value">{{ open }}</div>
+    <div class="stat-caption">Awaiting action</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <span>In Progress</span>
+      <span class="stat-icon purple">↻</span>
+    </div>
+    <div class="stat-value">{{ inProgress }}</div>
+    <div class="stat-caption">Currently being handled</div>
+  </article>
+
+  <article class="stat-card">
+    <div class="stat-top">
+      <span>Closed</span>
+      <span class="stat-icon green">✓</span>
+    </div>
+    <div class="stat-value">{{ closed }}</div>
+    <div class="stat-caption">Successfully completed</div>
+  </article>
+</section>
+
+@if (loading) {
+  <p class="message">Loading dashboard...</p>
+}
+
+@if (error) {
+  <p class="error-message">{{ error }}</p>
+}
+
+@if (!loading && !error) {
+  <section class="dashboard-details">
+    <article class="dashboard-card priority-card">
+      <div class="section-heading">
+        <div>
+          <h2>Priority Breakdown</h2>
+          <p>Requests grouped by priority level</p>
+        </div>
+      </div>
+
+      <div class="priority-row">
+        <div class="priority-label">
+          <span class="priority-dot high-dot"></span>
+          <span>High</span>
+        </div>
+        <strong>{{ highPriority }}</strong>
+        <div class="priority-track">
+          <div
+            class="priority-fill high-fill"
+            [style.width.%]="priorityPercent(highPriority)">
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-row">
+        <div class="priority-label">
+          <span class="priority-dot medium-dot"></span>
+          <span>Medium</span>
+        </div>
+        <strong>{{ mediumPriority }}</strong>
+        <div class="priority-track">
+          <div
+            class="priority-fill medium-fill"
+            [style.width.%]="priorityPercent(mediumPriority)">
+          </div>
+        </div>
+      </div>
+
+      <div class="priority-row">
+        <div class="priority-label">
+          <span class="priority-dot low-dot"></span>
+          <span>Low</span>
+        </div>
+        <strong>{{ lowPriority }}</strong>
+        <div class="priority-track">
+          <div
+            class="priority-fill low-fill"
+            [style.width.%]="priorityPercent(lowPriority)">
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="dashboard-card recent-card">
+      <div class="section-heading">
+        <div>
+          <h2>Recent Requests</h2>
+          <p>The five latest service requests</p>
+        </div>
+        <span class="recent-count">{{ recentRequests.length }}</span>
+      </div>
+
+      @if (recentRequests.length === 0) {
+        <div class="dashboard-empty">
+          <p>No service requests yet.</p>
+        </div>
+      } @else {
+        <div class="recent-list">
+          @for (request of recentRequests; track request.id) {
+            <div class="recent-item">
+              <div class="recent-main">
+                <strong>{{ request.title }}</strong>
+                <span class="recent-id">Request #{{ request.id }}</span>
+                <span class="recent-date">
+                  {{ request.createdAt | date:'mediumDate' }}
+                </span>
+              </div>
+
+              <div class="recent-badges">
+                <span
+                  class="recent-priority"
+                  [class.high]="request.priority === 'High'"
+                  [class.medium]="request.priority === 'Medium'"
+                  [class.low]="request.priority === 'Low'">
+                  {{ request.priority }}
+                </span>
+
+                <span
+                  class="recent-status"
+                  [class.open]="request.status === 'Open'"
+                  [class.in-progress]="request.status === 'In Progress'"
+                  [class.closed]="request.status === 'Closed'">
+                  {{ request.status }}
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </article>
+  </section>
+}

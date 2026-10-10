@@ -1,0 +1,173 @@
+<section class="request-panel">
+  <div class="panel-header">
+    <div>
+      <h2>Service Requests</h2>
+      <p>View, search, and manage submitted requests.</p>
+    </div>
+    <span class="request-count">
+      {{ filteredRequests.length }} requests
+    </span>
+  </div>
+
+  @if (success) {
+    <p class="success-message">{{ success }}</p>
+  }
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  @if (editingId !== null) {
+    <div class="edit-panel">
+      <h3>Edit Request #{{ editingId }}</h3>
+
+      <form (ngSubmit)="saveEdit()">
+        <label for="editTitle">Title *</label>
+        <input
+          id="editTitle"
+          name="editTitle"
+          [(ngModel)]="editTitle"
+          maxlength="150"
+          required
+        />
+
+        <label for="editDescription">Description *</label>
+        <textarea
+          id="editDescription"
+          name="editDescription"
+          [(ngModel)]="editDescription"
+          maxlength="2000"
+          rows="3"
+          required
+        ></textarea>
+
+        <div class="edit-fields">
+          <div>
+            <label for="editPriority">Priority</label>
+            <select
+              id="editPriority"
+              name="editPriority"
+              [(ngModel)]="editPriority"
+            >
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="editStatus">Status</label>
+            <select
+              id="editStatus"
+              name="editStatus"
+              [(ngModel)]="editStatus"
+            >
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="cancelEdit()"
+            [disabled]="saving"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="save-button"
+            [disabled]="saving || !editTitle.trim() || !editDescription.trim()"
+          >
+            {{ saving ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search requests..."
+      [value]="searchText"
+      (input)="onSearchChange($any($event.target).value)"
+    />
+
+    <select
+      [value]="selectedStatus"
+      (change)="onStatusChange($any($event.target).value)"
+    >
+      <option value="All">All statuses</option>
+      <option value="Open">Open</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Closed">Closed</option>
+    </select>
+  </div>
+
+  @if (loading) {
+    <p class="message">Loading service requests...</p>
+  } @else if (filteredRequests.length === 0) {
+    <div class="empty-state">
+      <h3>No requests found</h3>
+      <p>Try another search or create a new service request.</p>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Request</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (request of filteredRequests; track request.id) {
+            <tr>
+              <td>
+                <strong>{{ request.title }}</strong>
+                <p class="description">{{ request.description }}</p>
+                <small>#{{ request.id }}</small>
+              </td>
+              <td>
+                <span class="priority" [class]="request.priority.toLowerCase()">
+                  {{ request.priority }}
+                </span>
+              </td>
+              <td>
+                <span class="status" [class]="request.status.toLowerCase().replace(' ', '-')">
+                  {{ request.status }}
+                </span>
+              </td>
+              <td>{{ request.createdAt | date:'mediumDate' }}</td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    class="edit-button"
+                    (click)="startEdit(request)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="delete-button"
+                    (click)="deleteRequest(request)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

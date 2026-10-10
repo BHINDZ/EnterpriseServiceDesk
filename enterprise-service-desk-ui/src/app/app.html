@@ -1,0 +1,104 @@
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">E<span>.</span></div>
+      <div class="brand-copy">
+        <strong>Enterprise</strong>
+        <strong>Service Desk</strong>
+        <small>OPERATIONS PLATFORM</small>
+      </div>
+    </div>
+
+    <div class="nav-label">WORKSPACE</div>
+
+    <div class="nav-item active">
+      <span class="nav-icon">◫</span>
+      <span>Overview</span>
+      <span class="nav-indicator"></span>
+    </div>
+
+    <div class="nav-item">
+      <span class="nav-icon">≡</span>
+      <span>Service Requests</span>
+    </div>
+
+    <div class="nav-item">
+      <span class="nav-icon">⚙</span>
+      <span>Settings</span>
+    </div>
+
+    <div class="sidebar-note">
+      <span class="note-mark"></span>
+      <div>
+        <strong>Support that works.</strong>
+        <p>Every request, in focus.</p>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="avatar">EM</div>
+      <div class="profile-copy">
+        <strong>Demo Administrator</strong>
+        <small>System Administrator</small>
+      </div>
+      <span class="profile-menu">···</span>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="page-heading">
+        <div class="breadcrumb">
+          <span>Workspace</span>
+          <span class="breadcrumb-divider">/</span>
+          <strong>Overview</strong>
+        </div>
+
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span>
+          SERVICE OPERATIONS
+        </div>
+
+        <h1>Service desk<span class="heading-period">.</span></h1>
+        <p class="page-description">
+          A clearer view of your team's service operations.
+        </p>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="system-status">
+          <span class="status-dot"></span>
+          System operational
+        </div>
+
+        <button class="primary-button" (click)="openForm()">
+          <span class="button-plus">+</span>
+          New Request
+        </button>
+      </div>
+    </header>
+
+    <section class="content">
+      @if (showForm) {
+        <app-request-form
+          (cancelled)="closeForm()"
+          (created)="onRequestCreated()" />
+      }
+
+      <app-dashboard />
+
+      <app-request-list
+        [refreshKey]="refreshKey"
+        (changed)="onRequestChanged()"
+      />
+    </section>
+
+    <footer>
+      <span>ENTERPRISE SERVICE DESK</span>
+      <span class="footer-divider">·</span>
+      Portfolio Demonstration
+      <span class="footer-version">DESIGNED FOR BETTER OPERATIONS</span>
+    </footer>
+  </main>
+</div>

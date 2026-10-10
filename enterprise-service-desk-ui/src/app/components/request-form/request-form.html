@@ -1,0 +1,89 @@
+
+<section class="form-panel">
+  <div class="form-heading">
+    <div>
+      <h2>Create Service Request</h2>
+      <p>Enter the details of the issue or service needed.</p>
+    </div>
+
+    <button
+      type="button"
+      class="close-button"
+      aria-label="Close form"
+      [disabled]="submitting"
+      (click)="cancelled.emit()"
+    >✕</button>
+  </div>
+
+  <form (ngSubmit)="submit()" #requestForm="ngForm" novalidate>
+    <label for="title">Request Title *</label>
+    <input
+      id="title"
+      name="title"
+      [(ngModel)]="title"
+      #titleField="ngModel"
+      maxlength="150"
+      placeholder="e.g. Customer portal access issue"
+      required
+      [disabled]="submitting"
+      [class.invalid-field]="titleField.invalid && (titleField.touched || requestForm.submitted)"
+      aria-describedby="title-error"
+    />
+
+    @if (titleField.invalid && (titleField.touched || requestForm.submitted)) {
+      <p id="title-error" class="field-error">
+        @if (titleField.errors?.['required']) {
+          Title is required.
+        } @else if (titleField.errors?.['maxlength']) {
+          Title must not exceed 150 characters.
+        }
+      </p>
+    }
+
+    <label for="description">Description *</label>
+    <textarea
+      id="description"
+      name="description"
+      [(ngModel)]="description"
+      #descriptionField="ngModel"
+      maxlength="2000"
+      rows="4"
+      placeholder="Describe the issue and any relevant details..."
+      required
+      [disabled]="submitting"
+      [class.invalid-field]="descriptionField.invalid && (descriptionField.touched || requestForm.submitted)"
+      aria-describedby="description-error"
+    ></textarea>
+
+    @if (descriptionField.invalid && (descriptionField.touched || requestForm.submitted)) {
+      <p id="description-error" class="field-error">
+        @if (descriptionField.errors?.['required']) {
+          Description is required.
+        } @else if (descriptionField.errors?.['maxlength']) {
+          Description must not exceed 2,000 characters.
+        }
+      </p>
+    }
+
+    @if (error) {
+      <p class="error" role="alert">{{ error }}</p>
+    }
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="secondary-button"
+        [disabled]="submitting"
+        (click)="cancelled.emit()"
+      >Cancel</button>
+
+      <button
+        type="submit"
+        class="primary-button"
+        [disabled]="submitting || requestForm.invalid"
+      >
+        {{ submitting ? 'Creating...' : 'Create Request' }}
+      </button>
+    </div>
+  </form>
+</section>
